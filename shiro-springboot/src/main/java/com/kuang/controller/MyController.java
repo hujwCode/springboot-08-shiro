@@ -12,20 +12,41 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 public class MyController {
-
+    /**
+     * index
+     * @param model
+     * @return
+     */
     @RequestMapping({"/","/index"})
     public String toIndex(Model model){
         model.addAttribute("msg","hello,shiro");
         return "index";
     }
+
+    /**
+     * 添加
+     * @return
+     */
     @RequestMapping("/user/add")
     public String add(){
         return "user/add";
     }
 
+    /**
+     * 更新
+     * @return
+     */
     @RequestMapping("/user/update")
     public String update(){
         return "user/update";
+    }
+    /**
+     * 登陆
+     * @return
+     */
+    @RequestMapping("/toLogin")
+    public String toLogin(){
+        return "login";
     }
 
 }

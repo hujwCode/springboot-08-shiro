@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  *
  *
@@ -21,6 +24,21 @@ public class ShiroConfig {
         ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
         //关联securityManager
         bean.setSecurityManager(securityManager);
+
+        //添加shiro的内置过滤器
+        /*
+        *  anon:无需认证就可以访问
+        *  authc：必须认证了才能访问
+        *  user：必须拥有了记住我功能才能用
+        *  perms：拥有对某个资源的权限才能访问
+        *  role：拥有某个角色权限才可以访问
+        * */
+        Map<String, String> filterMap = new LinkedHashMap<>();
+        filterMap.put("/user/*","authc");
+        bean.setFilterChainDefinitionMap(filterMap);
+
+        bean.setLoginUrl("/toLogin");
+
         return bean;
     }
 
