@@ -4,6 +4,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,6 +57,13 @@ public class MyController {
         return "login";
     }
 
+    /**
+     * 登陆页面
+     * @param userName
+     * @param password
+     * @param model
+     * @return
+     */
     @RequestMapping("/login")
     public String login(String userName,String password,Model model){
         //获取当前的用户
@@ -65,6 +73,9 @@ public class MyController {
 
         try {
             subject.login(token);
+
+
+
             return "index";
         } catch (UnknownAccountException e) {
             model.addAttribute("msg", "用户名错误");
