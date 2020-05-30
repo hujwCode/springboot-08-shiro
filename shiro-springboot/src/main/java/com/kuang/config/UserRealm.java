@@ -1,8 +1,6 @@
 package com.kuang.config;
 
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -26,6 +24,15 @@ public class UserRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         System.out.println("执行了认证-》doGetAuthenticationInfo");
-        return null;
+
+        //用户名，密码 从数据库中取
+        String name ="root";
+        String password = "root";
+        UsernamePasswordToken userToken = (UsernamePasswordToken) authenticationToken;
+        if(!userToken.getUsername().equals(name)){
+            return null; //自动抛出异常 UnknownAccountException
+        }
+        //密码认证，shiro来做
+        return new SimpleAuthenticationInfo("",password,"");
     }
 }
