@@ -1,9 +1,15 @@
 package com.kuang.config;
 
+import com.kuang.pojo.User;
+import com.kuang.service.impl.UserServiceImpl;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 自定义的UserRealm
@@ -13,11 +19,24 @@ import org.apache.shiro.subject.PrincipalCollection;
  */
 
 public class UserRealm extends AuthorizingRealm {
+
+    @Autowired
+    UserServiceImpl userService;
     //授权
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         System.out.println("执行了授权-》doGetAuthorizationInfo");
-        return null;
+
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+
+        //拿到当前登陆的对象
+        Subject subject = SecurityUtils.getSubject();
+        //拿到user对象
+        User currentUser = (User) subject.getPrincipal();
+        //设置当前用户的权限
+        info.addStringPermission(currentUser.getPerms());
+
+        return info;
     }
 
     //认证
@@ -25,14 +44,14 @@ public class UserRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         System.out.println("执行了认证-》doGetAuthenticationInfo");
 
-        //用户名，密码 从数据库中取
-        String name ="root";
-        String password = "root";
         UsernamePasswordToken userToken = (UsernamePasswordToken) authenticationToken;
-        if(!userToken.getUsername().equals(name)){
-            return null; //自动抛出异常 UnknownAccountException
+        //连接数据库
+        User user = userService.queryUserByName(userToken.getUsername());
+        if (user == null){
+            return null;
         }
+        //可以加密，  MD5加密      MD5盐值加密
         //密码认证，shiro来做
-        return new SimpleAuthenticationInfo("",password,"");
+        return new SimpleAuthenticationInfo(user,user.getPassword(),"");
     }
 }

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Mapper
 public interface UserDao {
-
     User queryUserByName(String userName);
 
     int deleteByPrimaryKey(Integer id);
@@ -21,5 +20,4 @@ public interface UserDao {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
-
 }

@@ -33,10 +33,19 @@ public class ShiroConfig {
         *  perms：拥有对某个资源的权限才能访问
         *  role：拥有某个角色权限才可以访问
         * */
+        //拦截
         Map<String, String> filterMap = new LinkedHashMap<>();
+
+        //授权,未授权正常跳到401
+        filterMap.put("/user/add","perms[user:add]");
+        filterMap.put("/user/update","perms[user:update]");
+
         filterMap.put("/user/*","authc");
         bean.setFilterChainDefinitionMap(filterMap);
 
+        //设置未授权页面
+        bean.setUnauthorizedUrl("/noauth");
+        //设置登陆页面
         bean.setLoginUrl("/toLogin");
 
         return bean;

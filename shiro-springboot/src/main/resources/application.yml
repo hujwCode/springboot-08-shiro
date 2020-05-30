@@ -34,3 +34,6 @@ logging:
     com:
       kuang:
         dao: debug
+
+server:
+  port: 9999
